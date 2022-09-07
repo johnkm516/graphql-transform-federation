@@ -1,6 +1,8 @@
-import { delegateToSchema, makeExecutableSchema } from 'graphql-tools';
+import { delegateToSchema } from '@graphql-tools/delegate';
+import { makeExecutableSchema } from '@graphql-tools/schema';
 import { ApolloServer } from 'apollo-server';
 import { transformSchemaFederation } from '../src/transform-federation';
+import { OperationTypeNode } from 'graphql';
 
 const products = [
   {
@@ -34,21 +36,14 @@ const schemaWithoutFederation = makeExecutableSchema({
 });
 
 const federationSchema = transformSchemaFederation(schemaWithoutFederation, {
-  Query: {
-    extend: true,
-  },
   Product: {
-    extend: true,
     keyFields: ['id'],
-    fields: {
-      id: {
-        external: true,
-      },
-    },
+
     resolveReference(reference, context: { [key: string]: any }, info) {
+      console.log(info.returnType.toString());
       return delegateToSchema({
         schema: info.schema,
-        operation: 'query',
+        operation: OperationTypeNode.QUERY,
         fieldName: 'productById',
         args: {
           id: (reference as ProductKey).id,

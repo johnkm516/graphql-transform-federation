@@ -8,12 +8,32 @@ import {
   printSchema,
 } from 'graphql';
 import { addFederationAnnotations } from './transform-sdl';
+
+/*******************************************************************************
+ * BUG-FIX: E.Wolf, 2022-02-03
+ */
+import { GraphQLResolveInfo } from 'graphql';
 import {
-  entitiesField,
   EntityType,
-  GraphQLReferenceResolver,
+  entitiesField,
   serviceField,
-} from '@apollo/federation/dist/types';
+} from '@apollo/subgraph/dist/types';
+// See @apollo/subgraph/dist/schemaExtensions
+type GraphQLReferenceResolver<TContext> = (
+  reference: object,
+  context: TContext,
+  info: GraphQLResolveInfo,
+) => any;
+declare module 'graphql/type/definition' {
+  interface GraphQLObjectType {
+    resolveReference?: GraphQLReferenceResolver<any>;
+  }
+
+  interface GraphQLObjectTypeConfig<TSource, TContext> {
+    resolveReference?: GraphQLReferenceResolver<TContext>;
+  }
+}
+/******************************************************************************/
 
 export interface FederationFieldConfig {
   external?: boolean;

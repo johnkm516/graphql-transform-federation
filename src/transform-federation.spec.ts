@@ -1,8 +1,8 @@
-import { makeExecutableSchema } from 'graphql-tools';
+import { makeExecutableSchema } from '@graphql-tools/schema';
 import { transformSchemaFederation } from './transform-federation';
 import { execute } from 'graphql/execution/execute';
 import { parse } from 'graphql/language';
-import dedent = require('dedent');
+import dedent from 'dedent';
 
 describe('Transform Federation', () => {
   it('should add a _service field', async () => {
@@ -59,7 +59,7 @@ describe('Transform Federation', () => {
       Product: {
         keyFields: ['id'],
         extend: true,
-        resolveReference(reference) {
+        resolveReference(reference: any) {
           return {
             ...reference,
             name: 'mock name',

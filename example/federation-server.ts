@@ -1,7 +1,7 @@
 import { ServerInfo } from 'apollo-server';
 
 const { ApolloServer, gql } = require('apollo-server');
-const { buildFederatedSchema } = require('@apollo/federation');
+const { buildSubgraphSchema } = require('@apollo/federation');
 
 const typeDefs = gql`
   type Product @key(fields: "id") {
@@ -34,7 +34,7 @@ const resolvers = {
 };
 
 const server = new ApolloServer({
-  schema: buildFederatedSchema([
+  schema: buildSubgraphSchema([
     {
       typeDefs,
       resolvers,

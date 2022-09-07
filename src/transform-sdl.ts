@@ -1,5 +1,6 @@
 import {
   FieldDefinitionNode,
+  Kind,
   ObjectTypeDefinitionNode,
   ObjectTypeExtensionNode,
   parse,
@@ -89,7 +90,7 @@ export function addFederationAnnotations<TContext>(
           return {
             ...node,
             directives: [...(node.directives || []), ...newDirectives],
-            kind: extend ? 'ObjectTypeExtension' : node.kind,
+            kind: extend ? Kind.OBJECT_TYPE_EXTENSION : node.kind,
           };
         }
       },
